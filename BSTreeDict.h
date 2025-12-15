@@ -10,7 +10,6 @@
 template <typename V>
 class BSTreeDict : public Dict<V>
 {
-
 private:
     BSTree<TableEntry<V>> *tree;
 
@@ -25,37 +24,40 @@ public:
         delete tree;
     }
 
-    friend std::ostream &operator<<(std::ostream &out, const BSTreeDict<V> &bs)
+    friend ostream &operator<<(ostream &out, const BSTreeDict<V> &bs)
     {
         out << *(bs.tree);
         return out;
     }
 
-    V operator[](std::string key)
+    V operator[](string key)
     {
-        return tree->search(TableEntry<V>(key))->value;
+        return search(key);
     }
 
-    void insert(std::string key, V value) override
+    void insert(string key, V value) override
     {
-        tree->insert(TableEntry<V>(key, value));
+        TableEntry<V> aux(key, value);
+        tree->insert(aux);
     }
 
-    V search(std::string key) override
+    V search(string key) override
     {
-        return tree->search(TableEntry<V>(key))->value;
+        TableEntry<V> aux = TableEntry<V>(key);
+        return tree->search(aux).value;
     }
 
-    V remove(std::string key) override
+    V remove(string key) override
     {
-        V value = tree->search(TableEntry<V>(key))->value;
-        tree->remove(TableEntry<V>(key));
-        return value;
+        TableEntry<V> aux(key);
+        V pos = search(key);
+        tree->remove(aux);
+        return pos;
     }
 
-    V entries() override
+    int entries() override
     {
-        // Implementación para devolver las entradas (si es necesario)
+        return tree->size();
     }
 };
 
